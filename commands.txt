@@ -1,0 +1,4 @@
+sqoop import-all-tables --num-mappers 1 --connect "jdbc:mysql://quickstart.cloudera:3306/retail_db" --username "retail_dba" --password "coudera" --hive-import --hive-overwrite --create-hive-table --outdir java_files --hive-database default
+
+hadoop fs -mkdir /user/cloudera/sqoop_import
+
