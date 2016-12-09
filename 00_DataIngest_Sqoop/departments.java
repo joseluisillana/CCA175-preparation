@@ -2,8 +2,8 @@
 // WARNING: This class is AUTO-GENERATED. Modify at your own risk.
 //
 // Debug information:
-// Generated date: Fri Dec 09 19:33:25 UTC 2016
-// For connector: org.apache.sqoop.manager.GenericJdbcManager
+// Generated date: Fri Dec 09 19:17:34 UTC 2016
+// For connector: org.apache.sqoop.manager.MySQLManager
 import org.apache.hadoop.io.BytesWritable;
 import org.apache.hadoop.io.Text;
 import org.apache.hadoop.io.Writable;
