@@ -89,4 +89,3 @@ sqoop import -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --use
 # Insert on a existing hive table
 
 sqoop import --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --table departments --fields-terminated-by '|' --lines-terminated-by '\n' --hive-home /user/hive/warehouse --hive-import --hive-overwrite --hive-table departments --hive-database retail_db_jlir --outdir java_files
-
