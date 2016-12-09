@@ -86,5 +86,7 @@ sqoop import --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username
 
 sqoop import -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --table departments --outdir java_files --target-dir=/user/joseluisillana1709/sqoop_import/depWhere --append --fields-terminated-by '|' --lines-terminated-by 'n' --split-by department_id --where "department_id > 7"
 
+# Insert on a existing hive table
 
+sqoop import --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --table departments --fields-terminated-by '|' --lines-terminated-by '\n' --hive-home /user/hive/warehouse --hive-import --hive-overwrite --hive-table departments --hive-database retail_db_jlir --outdir java_files
 
