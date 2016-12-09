@@ -43,10 +43,48 @@ hadoop fs -rm -R /user/joseluisillana1709/sqoop_import
 ## IMPORT ALL TABLES TO DIR IN HDFS FROM MYSQL AS AVRO
 sqoop import-all-tables -m 12 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import --as-avrodatafile
 
+sqoop import  -m 4 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table departments --as-avrodatafile --split-by department_id
+
+sqoop import  -m 4 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table order_items --as-avrodatafile --split-by order_item_id
+
+sqoop import  -m 4 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table categories --as-avrodatafile --split-by category_id
+
+sqoop import  -m 4 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table customers  --as-avrodatafile --split-by customer_id
+
+sqoop import  -m 4 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table products --as-avrodatafile --split-by product_id
+
+sqoop import  -m 4 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table orders --as-avrodatafile --split-by order_id
+
 ## CHECK IF HIVE IS RUNNING
-hive -e "create table testingjlir (t int); insert into testingjlir values (1); select count(1) from testingjlir;
+hive -e "create table testingjlir (t int); insert into testingjlir values (1); select count(1) from testingjlir";
 
 ## IMPORT ALL TABLES TO DIR IN HDFS FROM MYSQL AND load data into hive default database
-sqoop import-all-tables -m 12 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive
+sqoop import-all-tables -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files
+
+sqoop import -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table departments --hive-database retail_db_jlir
+
+sqoop import -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table order_items --hive-database retail_db_jlir
+
+sqoop import -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table categories --hive-database retail_db_jlir
+
+sqoop import -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table customers --hive-database retail_db_jlir
+
+sqoop import -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table products --hive-database retail_db_jlir
+
+sqoop import -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table orders --hive-database retail_db_jlir
+
+# WHIT BOUNDARY QUERY
+
+sqoop import --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --table departments --boundary-query " SELECT 2, 8 FROM departments limit 1" --num-mappers 2 --target-dir /user/joseluisillana1709/sqoop_import/departemtBounds --columns department_id,department_name --split-by department_id
+
+
+# WITH JOINS
+
+sqoop import --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --query "select * from orders join order_items on orders.order_id = order_items.order_item_order_id where \$CONDITIONS" --num-mappers 4 --target-dir /user/joseluisillana1709/sqoop_import/order_item_joined --split-by order_id
+
+# CON where
+
+sqoop import -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --table departments --outdir java_files --target-dir=/user/joseluisillana1709/sqoop_import/depWhere --append --fields-terminated-by '|' --lines-terminated-by 'n' --split-by department_id --where "department_id > 7"
+
 
 
