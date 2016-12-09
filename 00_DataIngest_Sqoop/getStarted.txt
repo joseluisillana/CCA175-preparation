@@ -1,4 +1,5 @@
 
+############################### FIRST PART
 ## TO LIST DATABASES
 sqoop list-databases --connect "jdbc:mysql://ip-172-31-13-154:3306" --username "sqoopuser" --password "NHkkP876rp"
 
@@ -7,4 +8,45 @@ sqoop list-tables --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --use
 
 ## TO EXECUTE QUERYS
 sqoop eval --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --query "select count(1) from order_items"
+
+
+############################### SECOND PART
+## GENERATE SINK DIR IN HDFS
+hadoop fs -mkdir /user/joseluisillana1709/sqoop_import
+
+## IMPORT ALL TABLES TO DIR IN HDFS FROM MYSQL
+##categories
+##customers
+##departments
+##order_items
+##orders
+##products
+
+sqoop import-all-tables -m 4 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import
+
+sqoop import  -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table departments
+
+sqoop import  -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table order_items
+
+sqoop import  -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table categories
+
+sqoop import  -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table customers
+
+sqoop import  -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table products
+
+sqoop import  -m 1 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import -table orders
+
+
+## CLEAN DIR TO DO OTHER TEST
+hadoop fs -rm -R /user/joseluisillana1709/sqoop_import
+
+## IMPORT ALL TABLES TO DIR IN HDFS FROM MYSQL AS AVRO
+sqoop import-all-tables -m 12 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/sqoop_import --as-avrodatafile
+
+## CHECK IF HIVE IS RUNNING
+hive -e "create table testingjlir (t int); insert into testingjlir values (1); select count(1) from testingjlir;
+
+## IMPORT ALL TABLES TO DIR IN HDFS FROM MYSQL AND load data into hive default database
+sqoop import-all-tables -m 12 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive
+
 
