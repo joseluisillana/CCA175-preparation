@@ -1,0 +1,10 @@
+
+## TO LIST DATABASES
+sqoop list-databases --connect "jdbc:mysql://ip-172-31-13-154:3306" --username "sqoopuser" --password "NHkkP876rp"
+
+## TO LIST TABLES
+sqoop list-tables --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp"
+
+## TO EXECUTE QUERYS
+sqoop eval --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --query "select count(1) from order_items"
+
