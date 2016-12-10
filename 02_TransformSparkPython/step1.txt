@@ -1,0 +1,13 @@
+## Import a table to workwith
+
+sqoop import --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" \
+  --username=sqoopuser \
+  --password NHkkP876rp \
+  --table departments_jl \
+  --num-mappers 1 \
+  --target-dir /user/joseluisillana1709/pruebas_spark/raw/departments_jl
+
+
+## Execute a file called saveFile.py
+spark-submit --master local saveFile.py
+spark-submit --master yarn saveFile.py
