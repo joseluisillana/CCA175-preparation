@@ -21,9 +21,9 @@ order_item_product_price=float(oi[5])))
 orderItemsSchema = sqlContext.inferSchema(orderItems)
 orderItemsSchema.registerTempTable("order_items")
 
-joinAggData = sqlContext.sql("select o.order_date, sum(oi.order_item_subtotal),
-count(distinct o.order_id) from orders o join order_items oi
-on o.order_id = oi.order_item_order_id
+joinAggData = sqlContext.sql("select o.order_date, sum(oi.order_item_subtotal), \
+count(distinct o.order_id) from orders o join order_items oi \
+on o.order_id = oi.order_item_order_id \
 group by o.order_date order by o.order_date")
 
 for data in joinAggData.collect():
