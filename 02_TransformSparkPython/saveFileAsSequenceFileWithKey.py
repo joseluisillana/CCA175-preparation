@@ -1,5 +1,5 @@
 from pyspark import SparkContext, SparkConf
-conf = SparkConf().setAppName("pyspark-saveFileAsSequenceFileWithoutKey-py")
+conf = SparkConf().setAppName("pyspark-saveFileAsSequenceFileWithKey-py")
 sc = SparkContext(conf=conf)
 
 dataRDD = sc.textFile("/user/joseluisillana1709/pruebas_spark/raw/departments_jl")
