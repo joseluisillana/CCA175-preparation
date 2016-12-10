@@ -13,3 +13,9 @@ spark-submit --master local saveFile.py
 spark-submit --master yarn saveFile.py
 
 ## Execute a file called saveFilePrintCountLines.py
+spark-submit --master local saveFilePrintCountLines.py
+spark-submit --master yarn saveFilePrintCountLines.py
+
+## Execute a file called saveFileAsSequenceFileWithoutKey.py
+spark-submit --master local saveFileAsSequenceFileWithoutKey.py
+spark-submit --master yarn saveFileAsSequenceFileWithoutKey.py
