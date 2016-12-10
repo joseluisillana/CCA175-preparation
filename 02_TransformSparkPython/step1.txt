@@ -35,3 +35,24 @@ spark-submit --master yarn readSequenceFileWithoutKey.py
 ## Execute a file called readSequenceFileWithKey.py
 spark-submit --master local readSequenceFileWithKey.py
 spark-submit --master yarn readSequenceFileWithKey.py
+
+
+## FOR JOINING
+
+#LOAD THIS TABLES ON HDFS
+
+sqoop import  -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/pruebas_spark/raw/sqoop_import -table departments_jl
+
+sqoop import  -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/pruebas_spark/raw/sqoop_import  -table order_items_jl
+
+sqoop import  -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/pruebas_spark/raw/sqoop_import  -table categories_jl
+
+sqoop import  -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/pruebas_spark/raw/sqoop_import  -table customers_jl
+
+sqoop import  -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/pruebas_spark/raw/sqoop_import  -table products_jl
+
+sqoop import  -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --warehouse-dir=/user/joseluisillana1709/pruebas_spark/raw/sqoop_import  -table orders_jl
+
+# EXECUTE joiningOrderItems.py
+spark-submit --master local joiningOrderItems.py
+spark-submit --master yarn joiningOrderItems.py
