@@ -1,0 +1,35 @@
+## Creates the table destiny
+mysql -h ip-172-31-13-154 -u sqoopuser -p
+USE retail_db;
+CREATE TABLE departments_export_jl AS SELECT * FROM retail_db.departments_jl WHERE 1=2;
+
+--Initial export
+sqoop export --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username=sqoopuser --password NHkkP876rp \
+    --table departments_export_jl --export-dir /apps/hive/warehouse/retail_db_jlir.db/departments \
+    --input-fields-terminated-by "|" \
+    --input-lines-terminated-by "\n" \
+    --num-mappers 2 \
+    --outdir java_files
+
+--Export UPDATE mode
+sqoop export --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username=sqoopuser --password NHkkP876rp \
+    --table departments_export_jl \
+    --export-dir /user/joseluisillana1709/sqoop_merge/departments \
+    --batch \
+    --outdir java_files \
+    --num-mappers 1 \
+    --update-key department_id \
+    --update-mode allowinsert
+
+-- Export with specific delimiters
+
+sqoop export --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username=sqoopuser --password NHkkP876rp \
+    --table departments_test_jl \
+    --export-dir /apps/hive/warehouse/retail_db_jlir.db/departments \
+    --input-fields-terminated-by "|" \
+    --input-lines-terminated-by "\n" \
+    --batch \
+    --outdir java_files \
+    --num-mappers 2 \
+    --input-null-string nvl \
+    --input-null-non-string -1

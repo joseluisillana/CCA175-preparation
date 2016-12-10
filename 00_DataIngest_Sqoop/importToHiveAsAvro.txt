@@ -1,0 +1,14 @@
+sqoop import --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" \
+  --username=sqoopuser --password NHkkP876rp \
+  --table departments_jl \
+  --as-avrodatafile \
+  --target-dir=/user/joseluisillana1709/sqoop_import/departments \
+  --num-mappers 2 \
+  --split-by department_id
+
+  CREATE EXTERNAL TABLE departments_jl
+  ROW FORMAT SERDE 'org.apache.hadoop.hive.serde2.avro.AvroSerDe'
+  STORED AS INPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerInputFormat'
+  OUTPUTFORMAT 'org.apache.hadoop.hive.ql.io.avro.AvroContainerOutputFormat'
+  LOCATION '/user/joseluisillana1709/sqoop_import/departments/*.avro'
+  TBLPROPERTIES ('avro.schema.url'='hdfs:///user/joseluisillana1709/sqoop_import/departments/departments_jl.avsc');
