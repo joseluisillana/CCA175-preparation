@@ -1,7 +1,7 @@
-from pyspark import SparkContext, SparkConf, SqlContext
+from pyspark import SparkContext, SparkConf, SQLContext
 conf = SparkConf().setAppName("pyspark-readFromJSONinHDFS-py")
 sc = SparkContext(conf=conf)
-sqlContext = SqlContext(sc)
+sqlContext = SQLContext(sc)
 
 departmentsJson = sqlContext.jsonFile("/user/joseluisillana1709/departments_json/departments.json")
 departmentsJson.registerTempTable("departmentsTable")
