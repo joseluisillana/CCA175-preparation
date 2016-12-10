@@ -19,3 +19,15 @@ spark-submit --master yarn saveFilePrintCountLines.py
 ## Execute a file called saveFileAsSequenceFileWithoutKey.py
 spark-submit --master local saveFileAsSequenceFileWithoutKey.py
 spark-submit --master yarn saveFileAsSequenceFileWithoutKey.py
+
+## Execute a file called saveFileAsSequenceFileWithKey.py
+spark-submit --master local saveFileAsSequenceFileWithKey.py
+spark-submit --master yarn saveFileAsSequenceFileWithKey.py
+
+## Execute a file called saveFileAsSequenceFileWithKeyNewAPI.py
+spark-submit --master local saveFileAsSequenceFileWithKeyNewAPI.py
+spark-submit --master yarn saveFileAsSequenceFileWithKeyNewAPI.py
+
+## Execute a file called readSequenceFileWithoutKey.py
+spark-submit --master local readSequenceFileWithoutKey.py
+spark-submit --master yarn readSequenceFileWithoutKey.py
