@@ -3,7 +3,7 @@ conf = SparkConf().setAppName("pyspark-readFromJSONinHDFS-py")
 sc = SparkContext(conf=conf)
 sqlContext = SQLContext(sc)
 
-departmentsJson = sqlContext.jsonFile("/user/joseluisillana1709/departments_json/departments.json")
+departmentsJson = sqlContext.jsonFile("/user/joseluisillana1709/department_json/department.json")
 departmentsJson.registerTempTable("departmentsTable")
 departmentsData = sqlContext.sql("select * from departmentsTable")
 for rec in departmentsData.collect():
