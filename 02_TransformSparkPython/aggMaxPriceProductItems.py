@@ -14,3 +14,6 @@ lambda rec1, rec2:
   and float(rec1.split(",")[4]) >= float(rec2.split(",")[4]))
   else rec2)
 )
+
+for i in productsMap.take(5):
+    print i

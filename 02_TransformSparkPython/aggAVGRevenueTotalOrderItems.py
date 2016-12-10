@@ -11,4 +11,6 @@ totalOrders = sc.textFile("/user/joseluisillana1709/pruebas_spark/raw/sqoop_impo
     distinct().
     count()
 
-revenue/totalOrders
+result = revenue/totalOrders
+
+print result

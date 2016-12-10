@@ -10,3 +10,7 @@ for i in orderItemsMap.take(5):
   print i
 
 orderItemsReduce = orderItemsMap.reduce(lambda rev1, rev2: rev1 + rev2)
+
+
+for i in orderItemsReduce.take(5):
+    print i
