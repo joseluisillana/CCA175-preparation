@@ -31,3 +31,7 @@ spark-submit --master yarn saveFileAsSequenceFileWithKeyNewAPI.py
 ## Execute a file called readSequenceFileWithoutKey.py
 spark-submit --master local readSequenceFileWithoutKey.py
 spark-submit --master yarn readSequenceFileWithoutKey.py
+
+## Execute a file called readSequenceFileWithKey.py
+spark-submit --master local readSequenceFileWithKey.py
+spark-submit --master yarn readSequenceFileWithKey.py
