@@ -56,3 +56,17 @@ sqoop import  -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --us
 # EXECUTE joiningOrderItems.py
 spark-submit --master local joiningOrderItems.py
 spark-submit --master yarn joiningOrderItems.py
+
+
+# To join with HiveContext
+sqoop import -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table departments_jl --hive-database retail_db_jlir
+
+sqoop import -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table order_items_jl --hive-database retail_db_jlir
+
+sqoop import -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table categories_jl --hive-database retail_db_jlir
+
+sqoop import -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table customers_jl --hive-database retail_db_jlir
+
+sqoop import -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table products_jl --hive-database retail_db_jlir
+
+sqoop import -m 2 --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username "sqoopuser" --password "NHkkP876rp" --hive-import --hive-overwrite --create-hive-table --compress --compression-codec org.apache.hadoop.io.compress.SnappyCodec --outdir java_files -table orders_jl --hive-database retail_db_jlir
