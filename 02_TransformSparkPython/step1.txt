@@ -11,3 +11,5 @@ sqoop import --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" \
 ## Execute a file called saveFile.py
 spark-submit --master local saveFile.py
 spark-submit --master yarn saveFile.py
+
+## Execute a file called saveFilePrintCountLines.py
