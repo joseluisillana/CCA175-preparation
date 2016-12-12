@@ -1,0 +1,12 @@
+### Create necessary directories
+  cd
+  mkdir scala
+  cd scala; mkdir -p src/main/scala
+
+## Create a file with sbt extension (eg: simple.sbt)
+
+## Define dependencies with below 4 lines
+  name := "Simple Project"
+  version := "1.0"
+  scalaVersion := "2.10.4"
+  libraryDependencies += "org.apache.spark" %% "spark-core" % "1.2.1"
