@@ -13,8 +13,11 @@ productsGroupBy = productsMap.groupByKey()
 for item in productsGroupBy.take(100):
 	print item
 
-for i in productsGroupBy.map(lambda rec: sorted(rec[1], key=lambda k: float(k.split(",")[4]))).take(100):
-	print(i)
+try:
+	for i in productsGroupBy.map(lambda rec: sorted(rec[1], key=lambda k: float(k.split(",")[4]))).take(100):
+		print(i)
+except ValueError,e:
+	print "error",e,"on line",i
 
 for i in productsGroupBy.map(lambda rec: sorted(rec[1], key=lambda k: float(k.split(",")[4]), reverse=True)).take(100):
 	print(i)
