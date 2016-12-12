@@ -14,8 +14,8 @@ for i in productsGroupBy.flatMap(lambda x: getTopDenseN(x, 2)).collect():
 
 def getTopDenseN(rec, topN):
 	x = [ ]
-    topNPrices = [ ]
-    prodPrices = [ ]
+	topNPrices = [ ]
+	prodPrices = [ ]
     prodPricesDesc = [ ]
     for i in rec[1]:
       prodPrices.append(float(i.split(",")[4]))
