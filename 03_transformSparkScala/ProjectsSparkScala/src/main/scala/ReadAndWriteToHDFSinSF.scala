@@ -1,6 +1,6 @@
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
-import org.apache.hadoop.io.NullWritable
+import org.apache.hadoop.io._
 import org.apache.hadoop.mapreduce.lib.output._
 
 object ReadAndWriteToHDFSinSF {
