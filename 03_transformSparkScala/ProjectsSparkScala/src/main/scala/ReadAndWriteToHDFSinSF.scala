@@ -1,5 +1,7 @@
 import org.apache.spark.SparkContext
 import org.apache.spark.SparkConf
+import org.apache.hadoop.io._
+import org.apache.hadoop.mapreduce.lib.output._
 
 object ReadAndWriteToHDFSinSF {
   def main(args: Array[String]) {
