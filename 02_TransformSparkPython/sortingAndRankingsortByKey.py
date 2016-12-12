@@ -6,7 +6,7 @@ ordersRAW = sc.textFile("/user/joseluisillana1709/pruebas_spark/raw/sqoop_import
 ordersMAP = ordersRAW.map(lambda rec: (int(rec.split(",")[0]),rec))
 ordersSorted = ordersMAP.sortByKey()
 
-for item in ordersSorted.collect():
+for item in ordersSorted.take(5):
 	print item
 
 
