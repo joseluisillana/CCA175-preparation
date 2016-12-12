@@ -10,3 +10,14 @@
   version := "1.0"
   scalaVersion := "2.10.4"
   libraryDependencies += "org.apache.spark" %% "spark-core" % "1.2.1"
+
+## PUT THE CODE
+
+## Compile into jar file
+  sbt package
+
+## RUN NATIVE
+  spark-submit --class "SimpleApp" --master local /home/joseluisillana1709/CCA175-preparation/03_transformSparkScala/SimpleApp/target/scala-2.10/simple-project_2.10-1.0.jar
+
+## RUN YARN
+  spark-submit --class "SimpleApp" --master yarn /home/joseluisillana1709/CCA175-preparation/03_transformSparkScala/SimpleApp/target/scala-2.10/simple-project_2.10-1.0.jar
