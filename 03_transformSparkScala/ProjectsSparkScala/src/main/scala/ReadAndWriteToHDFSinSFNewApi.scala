@@ -1,5 +1,5 @@
-import org.apache.hadoop.io.Text
-import org.apache.hadoop.mapreduce.lib.output.SequenceFileOutputFormat
+import org.apache.hadoop.io._
+import org.apache.hadoop.mapreduce.lib.output._
 import org.apache.spark.SparkContext._
 import org.apache.spark.{SparkConf, SparkContext}
 
@@ -10,7 +10,7 @@ object ReadAndWriteToHDFSinSFNewApi {
 
     val dataRDD = sc.textFile("/user/joseluisillana1709/pruebas_spark/raw/sqoop_import/departments_jl")
 
-    val dataMap = dataRDD.map(x => (x.split(",")(0), x.split(",")(1)))
+    val dataMap = dataRDD.map(x => (new Text(x.split(",")(0)), new Text(x.split(",")(1))))
 
     val path = "/user/joseluisillana1709/pruebas_spark/scalaspark/sparkresults/departmentsSequenceFileNewApi"
 
