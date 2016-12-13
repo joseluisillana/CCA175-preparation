@@ -13,6 +13,6 @@ object ReadAndWriteToHDFSinSF {
 
     val dataMap = dataRDD.map(x => (NullWritable.get(),x))
 
-    dataMap.saveAsSequenceFile("/user/joseluisillana1709/pruebas_spark/sparkresults/departmentsSequenceFile")
+    dataMap.saveAsSequenceFile("/user/joseluisillana1709/pruebas_spark/scalaspark/sparkresults/departmentsSequenceFile")
   }
 }
