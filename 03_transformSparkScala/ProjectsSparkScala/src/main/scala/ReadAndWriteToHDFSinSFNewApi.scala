@@ -18,7 +18,7 @@ object ReadAndWriteToHDFSinSFNewApi {
       path,
       classOf[Text],
       classOf[Text],
-      classOf[SequenceFileOutputFormat[Text, Text]]
+      classOf[SequenceFileOutputFormat[Text ,Text ]]
     )
   }
 }
