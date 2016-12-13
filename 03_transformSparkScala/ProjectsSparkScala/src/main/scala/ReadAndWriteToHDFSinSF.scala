@@ -1,4 +1,5 @@
 import org.apache.spark.SparkContext
+import org.apache.spark.SparkContext._
 import org.apache.spark.SparkConf
 import org.apache.hadoop.io.NullWritable
 import org.apache.hadoop.mapreduce.lib.output._
