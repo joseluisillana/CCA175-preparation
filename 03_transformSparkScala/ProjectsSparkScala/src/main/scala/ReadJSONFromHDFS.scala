@@ -3,7 +3,9 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object ReadJSONFromHDFS {
   def main(args: Array[String]) {
-    val conf = new SparkConf().setAppName(s"${this.getClass.getName}  with spark and scala")
+    val conf = new SparkConf()
+      .setAppName(s"${this.getClass.getName}  with spark and scala")
+
     val sc = new SparkContext(conf)
     val sqlContext = new SQLContext(sc)
 
