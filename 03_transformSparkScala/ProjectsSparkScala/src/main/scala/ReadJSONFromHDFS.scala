@@ -1,4 +1,4 @@
-import org.apache.spark.sql.SQLContext
+import org.apache.spark.sql._
 import org.apache.spark.{SparkConf, SparkContext}
 
 object ReadJSONFromHDFS {

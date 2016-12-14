@@ -3,7 +3,9 @@ import org.apache.spark.{SparkConf, SparkContext}
 
 object ReadFromHive {
   def main(args: Array[String]) {
-    val conf = new SparkConf().setAppName(s"${this.getClass.getName}  with spark and scala")
+    val conf = new SparkConf()
+      .setAppName(s"${this.getClass.getName}  with spark and scala")
+      .setExecutorEnv("spark.sql.hive.metastore.version",	"1.2.1")
     val sc = new SparkContext(conf)
     val sqlContext = new HiveContext(sc)
 
