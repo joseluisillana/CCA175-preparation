@@ -1,5 +1,6 @@
-import org.apache.spark.SparkContext
-import org.apache.spark.SparkConf
+package com.sparkscala.part1
+
+import org.apache.spark.{SparkConf, SparkContext}
 
 object ReadAndWriteToHDFS {
   def main(args: Array[String]) {

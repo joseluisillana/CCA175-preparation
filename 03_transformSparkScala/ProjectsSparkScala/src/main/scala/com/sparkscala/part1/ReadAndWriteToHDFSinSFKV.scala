@@ -1,4 +1,5 @@
-import org.apache.spark.SparkContext._
+package com.sparkscala.part1
+
 import org.apache.spark.{SparkConf, SparkContext}
 
 object ReadAndWriteToHDFSinSFKV {

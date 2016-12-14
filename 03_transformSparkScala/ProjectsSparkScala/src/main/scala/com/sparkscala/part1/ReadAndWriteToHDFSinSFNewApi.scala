@@ -1,6 +1,7 @@
+package com.sparkscala.part1
+
 import org.apache.hadoop.io._
 import org.apache.hadoop.mapreduce.lib.output._
-import org.apache.spark.SparkContext._
 import org.apache.spark.{SparkConf, SparkContext}
 
 object ReadAndWriteToHDFSinSFNewApi {

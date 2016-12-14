@@ -1,3 +1,5 @@
+package com.sparkscala.part1
+
 import org.apache.spark.sql._
 import org.apache.spark.{SparkConf, SparkContext}
 
