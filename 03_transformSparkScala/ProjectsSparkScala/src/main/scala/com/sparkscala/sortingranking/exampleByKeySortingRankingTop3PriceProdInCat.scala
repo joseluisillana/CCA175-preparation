@@ -20,7 +20,7 @@ object exampleByKeySortingRankingTop3PriceProdInCat {
       groupByKey().
       flatMap(x => getTopDenseN(x, 2)).
       collect().
-      foreach(s"Top 3 priced products in category: {el}"
+      foreach(el => println(s"Top 3 priced products in category: {el}"))
 
 
     def getTopDenseN(rec: (String, Iterable[String]), topN: Int): Iterable[String] = {
