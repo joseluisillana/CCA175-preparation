@@ -55,3 +55,47 @@ sqoop import --connect "jdbc:mysql://ip-172-31-13-154:3306/retail_db" --username
 #######################################################################################################################################
 ######### Copiamos los ficheros .avsc  a HDFS
 #######################################################################################################################################
+
+hadoop fs -mkdir /user/joseluisillana1709/sqoop_avro_files
+hadoop fs -copyFromLocal ./* /user/joseluisillana1709/sqoop_avro_files
+
+#######################################################################################################################################
+######### CREAMOS LAS TABLAS
+#######################################################################################################################################
+
+CREATE EXTERNAL TABLE customers_avro_jl
+STORED AS AVRO
+LOCATION 'hdfs:///user/joseluisillana1709/sqoop_avro_import/customers_jl'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///user/joseluisillana1709/sqoop_avro_files/customers_jl.avsc');
+
+CREATE EXTERNAL TABLE departments_avro_jl
+STORED AS AVRO
+LOCATION 'hdfs:///user/joseluisillana1709/sqoop_avro_import/departments_jl'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///user/joseluisillana1709/sqoop_avro_files/departments_jl.avsc');
+
+CREATE EXTERNAL TABLE order_items_avro_jl
+STORED AS AVRO
+LOCATION 'hdfs:///user/joseluisillana1709/sqoop_avro_import/order_items_jl'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///user/joseluisillana1709/sqoop_avro_files/order_items_jl.avsc');
+
+CREATE EXTERNAL TABLE orders_avro_jl
+STORED AS AVRO
+LOCATION 'hdfs:///user/joseluisillana1709/sqoop_avro_import/orders_jl'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///user/joseluisillana1709/sqoop_avro_files/orders_jl.avsc');
+
+CREATE EXTERNAL TABLE products_avro_jl
+STORED AS AVRO
+LOCATION 'hdfs:///user/joseluisillana1709/sqoop_avro_import/products_jl'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///user/joseluisillana1709/sqoop_avro_files/products_jl.avsc');
+
+CREATE EXTERNAL TABLE categories_avro_jl
+STORED AS AVRO
+LOCATION 'hdfs:///user/joseluisillana1709/sqoop_avro_import/categories_jl'
+TBLPROPERTIES ('avro.schema.url'='hdfs:///user/joseluisillana1709/sqoop_avro_files/categories_jl.avsc');
+
+
+#######################################################################################################################################
+######### MODIFICANDO AVRO
+#######################################################################################################################################
+
+1º Backup de /avscfiles/department_jl.avsc

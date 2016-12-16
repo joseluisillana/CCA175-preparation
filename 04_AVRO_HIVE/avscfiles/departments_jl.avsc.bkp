@@ -9,22 +9,10 @@
     "columnName" : "department_id",
     "sqlType" : "4"
   }, {
-    "name" : "department_mgr",
-    "type" : [ "int" ],
-    "default" : null,
-    "columnName" : "department_manager_id",
-    "sqlType" : "4"
-  }, {
     "name" : "department_name",
     "type" : [ "null", "string" ],
     "default" : null,
     "columnName" : "department_name",
-    "sqlType" : "12"
-  }, {
-    "name" : "department_loc",
-    "type" : [ "null", "string" ],
-    "default" : null,
-    "columnName" : "department_loc",
     "sqlType" : "12"
   } ],
   "tableName" : "departments_jl"
