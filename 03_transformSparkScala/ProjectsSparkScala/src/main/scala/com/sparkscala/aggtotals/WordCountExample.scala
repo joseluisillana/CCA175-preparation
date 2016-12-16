@@ -1,4 +1,4 @@
-package com.sparkscala.part2
+package com.sparkscala.aggtotals
 
 import org.apache.spark.{SparkConf, SparkContext}
 

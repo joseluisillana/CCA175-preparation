@@ -1,4 +1,4 @@
-package com.sparkscala.part1
+package com.sparkscala.movedata
 
 import org.apache.spark.sql._
 import org.apache.spark.{SparkConf, SparkContext}

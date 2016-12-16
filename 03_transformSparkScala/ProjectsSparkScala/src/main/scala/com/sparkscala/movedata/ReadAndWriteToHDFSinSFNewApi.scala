@@ -1,4 +1,4 @@
-package com.sparkscala.part1
+package com.sparkscala.movedata
 
 import org.apache.hadoop.io._
 import org.apache.hadoop.mapreduce.lib.output._
