@@ -11,7 +11,7 @@
   }, {
     "name" : "department_mgr",
     "type" : "int",
-    "default" : null,
+    "default" : -1,
     "columnName" : "department_manager_id",
     "sqlType" : "4"
   }, {

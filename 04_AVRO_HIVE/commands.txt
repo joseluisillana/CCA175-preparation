@@ -99,3 +99,4 @@ TBLPROPERTIES ('avro.schema.url'='hdfs:///user/joseluisillana1709/sqoop_avro_fil
 #######################################################################################################################################
 
 1º Backup de /avscfiles/department_jl.avsc
+2º Editamos el avsc, y lo subimos a hdfs.
