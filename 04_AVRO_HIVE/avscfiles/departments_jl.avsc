@@ -10,7 +10,7 @@
     "sqlType" : "4"
   }, {
     "name" : "department_mgr",
-    "type" : [ "int" ],
+    "type" : "int",
     "default" : null,
     "columnName" : "department_manager_id",
     "sqlType" : "4"
