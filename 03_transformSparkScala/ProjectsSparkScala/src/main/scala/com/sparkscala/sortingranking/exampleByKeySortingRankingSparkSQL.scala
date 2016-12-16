@@ -14,7 +14,7 @@ object exampleByKeySortingRankingSparkSQL {
     //Sorting using queries
     // Global sorting and ranking
     val queryA = "select * from products order by product_price desc"
-    val queryB = "select * from products order by product_price desc limit 10""
+    val queryB = "select * from products order by product_price desc limit 10"
 
     //By key sorting
     //Using order by is not efficient, it serializes
