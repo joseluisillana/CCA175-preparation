@@ -15,6 +15,6 @@ object AggTotalElementnsInDS_Orders {
       textFile("/user/joseluisillana1709/pruebas_spark/raw/sqoop_import/orders_jl")
 
 
-     println(s"TOTAL of orders: ${ordersRDD.count()}"))
+     println(s"TOTAL of orders: ${ordersRDD.count()}")
   }
 }

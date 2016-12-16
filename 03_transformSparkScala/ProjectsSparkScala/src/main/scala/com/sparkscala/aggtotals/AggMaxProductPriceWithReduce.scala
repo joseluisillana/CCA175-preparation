@@ -25,6 +25,6 @@ object AggMaxProductPriceWithReduce {
         rec2)
     )
 
-     println(s"Max price of product using reduce : ${result}"))
+     println(s"Max price of product using reduce : ${result}")
   }
 }

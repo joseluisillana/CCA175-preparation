@@ -18,6 +18,6 @@ object AggTotalRevenueOrdersItems {
 
     val orderItemReduce = orderItemsMap.reduce((acc,value) => acc + value)
 
-     println(s"TOTAL of revenues : ${orderItemReduce}"))
+     println(s"TOTAL of revenues : ${orderItemReduce}")
   }
 }
