@@ -34,6 +34,7 @@ object NetworkWordCount {
     val wordCounts = pairs.reduceByKey(_ + _)
 
     wordCounts.print()
+
     ssc.start()
     ssc.awaitTermination()
   }
