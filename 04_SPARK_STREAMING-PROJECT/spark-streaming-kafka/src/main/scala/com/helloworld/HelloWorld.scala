@@ -5,6 +5,9 @@ package com.helloworld
   */
 object HelloWorld {
   def main(args: Array[String]): Unit = {
-    println("Hello World!")
+    val conf = com.typesafe.config.ConfigFactory.load()
+    val label = conf.getString("aws.kafka-bootstrap")
+
+    println(s"Hello World! ${label}")
   }
 }

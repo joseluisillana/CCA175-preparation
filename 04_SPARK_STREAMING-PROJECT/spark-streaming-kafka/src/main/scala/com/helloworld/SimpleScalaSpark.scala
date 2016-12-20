@@ -9,7 +9,10 @@ import org.apache.spark.{SparkConf, SparkContext}
 object SimpleScalaSpark {
 
   def main(args: Array[String]) {
-    val logFile = "/home/joseluisillana/ZZ_Trabajo/ZZ_Repositorios/99_PERSONAL/CCA175-preparation/mats/davinci.txt" // Should be some file on your system
+    val appConfig = com.typesafe.config.ConfigFactory.load()
+    val routeToFile = appConfig.getString("aws.fileToTest")
+
+    val logFile = routeToFile // Should be some file on your system
     val conf = new SparkConf().setAppName("Simple Application").setMaster("local[*]")
     val sc = new SparkContext(conf)
     val logData = sc.textFile(logFile, 2).cache()

@@ -1,5 +1,5 @@
 name := "spark-streaming-kafka"
-
+organization := "com.jlir.sparkstreaming"
 version := "1.0"
 
 scalaVersion := "2.10.6"
