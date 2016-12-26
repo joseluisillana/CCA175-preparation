@@ -6,7 +6,7 @@ ordersRDD = sc.textFile("/user/joseluisillana1709/pruebas_spark/raw/sqoop_import
 
 ordersMap = ordersRDD.map(lambda x: (x.split(",")[3],x))
 
-ordersByStatus = ordersMap.combineByKey(1,
+ordersByStatus = ordersMap.combineByKey(lambda value :1,
   lambda accumulated, newvalue: accumulated+1,
   lambda accumulated, newvalue: accumulated+newvalue
 )
