@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Implementation-Title: dstream-twitter
+Implementation-Version: 0.1.0-SNAPSHOT
+Spark-HasRPackage: false
+Specification-Vendor: org.spark-project
+Specification-Title: dstream-twitter
+Implementation-Vendor-Id: org.spark-project
+Specification-Version: 0.1.0-SNAPSHOT
+Implementation-Vendor: org.spark-project
+

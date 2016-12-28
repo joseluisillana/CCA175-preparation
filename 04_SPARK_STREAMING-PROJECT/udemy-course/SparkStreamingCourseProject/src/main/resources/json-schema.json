@@ -1,0 +1,335 @@
+{
+  "type":"object",
+  "$schema": "http://json-schema.org/draft-03/schema",
+  "id": "structured-log",
+  "required":true,
+  "properties":{
+    "self": {
+      "type":"object",
+      "id": "structured-log/self",
+      "required":true,
+      "properties":{
+        "health": {
+          "type":"object",
+          "id": "structured-log/self/health",
+          "required":true,
+          "properties":{
+            "appErrorCode": {
+              "type":"array",
+              "id": "structured-log/self/health/appErrorCode",
+              "required":false,
+              "items":[
+                {
+                  "type":"string",
+                  "id": "structured-log/self/health/appErrorCode/0",
+                  "default": "Not_enough_balance",
+                  "required":false
+                },
+                {
+                  "type":"string",
+                  "id": "structured-log/self/health/appErrorCode/1",
+                  "default": "Account_locked",
+                  "required":false
+                }
+              ]
+            },
+            "appStatus": {
+              "type":"string",
+              "id": "structured-log/self/health/appStatus",
+              "default": "OK",
+              "required":false
+            },
+            "httpStatus": {
+              "type":"number",
+              "id": "structured-log/self/health/httpStatus",
+              "default":200,
+              "required":false
+            },
+            "responseTime": {
+              "type":"number",
+              "id": "structured-log/self/health/responseTime",
+              "default":2012,
+              "required":true
+            },
+            "subBlocks": {
+              "type":"array",
+              "id": "structured-log/self/health/subBlocks",
+              "required":false,
+              "items":
+              {
+                "type":"object",
+                "id": "structured-log/self/health/subBlocks/0",
+                "required":false,
+                "properties":{
+                  "blockName": {
+                    "type":"string",
+                    "id": "structured-log/self/health/subBlocks/0/blockName",
+                    "default": "page_render",
+                    "required":false
+                  },
+                  "responseTime": {
+                    "type":"number",
+                    "id": "structured-log/self/health/subBlocks/0/responseTime",
+                    "default":500,
+                    "required":false
+                  },
+                  "timestamp": {
+                    "type":"string",
+                    "id": "structured-log/self/health/subBlocks/0/timestamp",
+                    "default": "2007-11-03T13:18:05.423-03:00",
+                    "required":false
+                  }
+                }
+              }
+
+
+            },
+            "timestamp": {
+              "type":"string",
+              "id": "structured-log/self/health/timestamp",
+              "default": "2007-11-03T13:18:05.423+01:00",
+              "required":true
+            }
+          }
+        },
+        "inboundCall": {
+          "type":"object",
+          "id": "structured-log/self/inboundCall",
+          "required":true,
+          "properties":{
+            "parentId": {
+              "type":"string",
+              "id": "structured-log/self/inboundCall/parentId",
+              "default": "dcb9f498-4444-75e5-22f4-661e8645214e",
+              "required":true
+            }
+          }
+        },
+        "outboundCall": {
+          "type":"array",
+          "id": "structured-log/self/outboundCall",
+          "required":true,
+          "items":
+          {
+            "type":"object",
+            "id": "structured-log/self/outboundCall/0",
+            "required":true,
+            "properties":{
+              "childId": {
+                "type":"string",
+                "id": "structured-log/self/outboundCall/0/childId",
+                "default": "dcb9f498-470e-75e5-22f4-661e8645214e",
+                "required":true
+              },
+              "health": {
+                "type":"object",
+                "id": "structured-log/self/outboundCall/0/health",
+                "required":true,
+                "properties":{
+                  "appErrorCode": {
+                    "type":"array",
+                    "id": "structured-log/self/outboundCall/0/health/appErrorCode",
+                    "required":false,
+                    "items":
+                    {
+                      "type":"string",
+                      "id": "structured-log/self/outboundCall/0/health/appErrorCode/0",
+                      "default": "stateChangeGoOn",
+                      "required":false
+                    }
+
+
+                  },
+                  "appStatus": {
+                    "type":"string",
+                    "id": "structured-log/self/outboundCall/0/health/appStatus",
+                    "default": "999",
+                    "required":false
+                  },
+                  "httpStatus": {
+                    "type":"number",
+                    "id": "structured-log/self/outboundCall/0/health/httpStatus",
+                    "default":401,
+                    "required":true
+                  },
+                  "responseTime": {
+                    "type":"number",
+                    "id": "structured-log/self/outboundCall/0/health/responseTime",
+                    "default":252,
+                    "required":true
+                  },
+                  "subBlocks": {
+                    "type":"array",
+                    "id": "structured-log/self/outboundCall/0/health/subBlocks",
+                    "required":false,
+                    "items":
+                    {
+                      "type":"object",
+                      "id": "structured-log/self/outboundCall/0/health/subBlocks/0",
+                      "required":false,
+                      "properties":{
+                        "blockName": {
+                          "type":"string",
+                          "id": "structured-log/self/outboundCall/0/health/subBlocks/0/blockName",
+                          "default": "page_render",
+                          "required":false
+                        },
+                        "responseTime": {
+                          "type":"number",
+                          "id": "structured-log/self/outboundCall/0/health/subBlocks/0/responseTime",
+                          "default":25012,
+                          "required":false
+                        },
+                        "timestamp": {
+                          "type":"string",
+                          "id": "structured-log/self/outboundCall/0/health/subBlocks/0/timestamp",
+                          "default": "2007-11-03T13:18:05.423-03:00",
+                          "required":false
+                        }
+                      }
+                    }
+
+
+                  },
+                  "timestamp": {
+                    "type":"string",
+                    "id": "structured-log/self/outboundCall/0/health/timestamp",
+                    "default": "2007-11-03T13:18:05.423+01:00",
+                    "required":true
+                  }
+                }
+              },
+              "srvHref": {
+                "type":"string",
+                "id": "structured-log/self/outboundCall/0/srvHref",
+                "default": "PUT https://www.bbva.es/ASO/cards/V01/ES0182061500000000000.../operationalRestrictions",
+                "required":false
+              },
+              "srvId": {
+                "type":"string",
+                "id": "structured-log/self/outboundCall/0/srvId",
+                "default": "SMC201600323",
+                "required":false
+              },
+              "srvType": {
+                "type":"string",
+                "id": "structured-log/self/outboundCall/0/srvType",
+                "default": "ASO",
+                "required":false
+              }
+            }
+          }
+
+
+        },
+        "srvHref": {
+          "type":"string",
+          "id": "structured-log/self/srvHref",
+          "default": "/srv/mysrv",
+          "required":false
+        },
+        "srvId": {
+          "type":"string",
+          "id": "structured-log/self/srvId",
+          "default": "FR234567",
+          "required":true
+        },
+        "srvType": {
+          "type":"string",
+          "id": "structured-log/self/srvType",
+          "default": "bbva.es_front",
+          "required":true
+        },
+        "traceability": {
+          "type":"object",
+          "id": "structured-log/self/traceability",
+          "required":true,
+          "properties":{
+            "aap": {
+              "type":"string",
+              "id": "structured-log/self/traceability/aap",
+              "default": "0000001",
+              "required":true
+            },
+            "customer": {
+              "type":"object",
+              "id": "structured-log/self/traceability/customer",
+              "required":false,
+              "properties":{
+                "customerId": {
+                  "type":"string",
+                  "id": "structured-log/self/traceability/customer/customerId",
+                  "default": "ES0182014612218C",
+                  "required":false
+                }
+              }
+            },
+            "location": {
+              "type":"object",
+              "id": "structured-log/self/traceability/location",
+              "required":false,
+              "properties":{
+                "geoLocation": {
+                  "type":"object",
+                  "id": "structured-log/self/traceability/location/geoLocation",
+                  "required":false,
+                  "properties":{
+                    "lat": {
+                      "type":"number",
+                      "id": "structured-log/self/traceability/location/geoLocation/lat",
+                      "default":-59.226556,
+                      "required":false
+                    },
+                    "lon": {
+                      "type":"string",
+                      "id": "structured-log/self/traceability/location/geoLocation/lon",
+                      "default": "82.617188",
+                      "required":false
+                    }
+                  }
+                },
+                "ipAddress": {
+                  "type":"string",
+                  "id": "structured-log/self/traceability/location/ipAddress",
+                  "default": "10.23.93.91",
+                  "required":false
+                }
+              }
+            },
+            "sessionId": {
+              "type":"string",
+              "id": "structured-log/self/traceability/sessionId",
+              "default": "74982374982347238974",
+              "required":false
+            },
+            "taskType": {
+              "type":"string",
+              "id": "structured-log/self/traceability/taskType",
+              "default": "LIMIT_OPERATIONS",
+              "required":true
+            },
+            "userAgent": {
+              "type":"string",
+              "id": "structured-log/self/traceability/userAgent",
+              "default": "Mozilla/5.0...",
+              "required":false
+            },
+            "user": {
+              "type":"object",
+              "id": "structured-log/self/traceability/user",
+              "required":false,
+              "properties":{
+                "userId": {
+                  "type":"string",
+                  "id": "structured-log/self/traceability/user/userId",
+                  "default": "47028460A",
+                  "required":false
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
