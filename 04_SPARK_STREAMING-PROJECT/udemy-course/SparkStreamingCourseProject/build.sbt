@@ -24,9 +24,9 @@ libraryDependencies ++= Seq(
   "com.github.fge" % "json-schema-validator" % "2.2.6",
   "com.typesafe" % "config" % "1.3.1",
   "org.twitter4j" % "twitter4j-core" % twitterVersion,
-  "org.twitter4j" % "twitter4j-stream" % twitterVersion,
-  "org.apache.spark" %% "spark-streaming-twitter" % sscTwitterVersion,
-  "org.spark-project" %% "dstream-twitter" % "0.1.0"
+  "org.twitter4j" % "twitter4j-stream" % twitterVersion
+ // "org.apache.spark" %% "spark-streaming-twitter" % sscTwitterVersion,
+  //"org.spark-project" %% "dstream-twitter" % "0.1.0"
 
 )
 
