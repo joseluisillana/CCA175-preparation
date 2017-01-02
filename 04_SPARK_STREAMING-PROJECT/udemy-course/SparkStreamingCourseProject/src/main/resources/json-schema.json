@@ -3,11 +3,13 @@
   "$schema": "http://json-schema.org/draft-03/schema",
   "id": "structured-log",
   "required":true,
+  "additionalProperties": false,
   "properties":{
     "self": {
       "type":"object",
       "id": "structured-log/self",
       "required":true,
+      "additionalProperties": false,
       "properties":{
         "health": {
           "type":"object",
@@ -244,6 +246,7 @@
           "type":"object",
           "id": "structured-log/self/traceability",
           "required":true,
+          "additionalProperties": false,
           "properties":{
             "aap": {
               "type":"string",
@@ -255,6 +258,7 @@
               "type":"object",
               "id": "structured-log/self/traceability/customer",
               "required":false,
+              "additionalProperties": false,
               "properties":{
                 "customerId": {
                   "type":"string",
@@ -268,11 +272,13 @@
               "type":"object",
               "id": "structured-log/self/traceability/location",
               "required":false,
+              "additionalProperties": false,
               "properties":{
                 "geoLocation": {
                   "type":"object",
                   "id": "structured-log/self/traceability/location/geoLocation",
                   "required":false,
+                  "additionalProperties": false,
                   "properties":{
                     "lat": {
                       "type":"number",
@@ -318,6 +324,7 @@
               "type":"object",
               "id": "structured-log/self/traceability/user",
               "required":false,
+              "additionalProperties": false,
               "properties":{
                 "userId": {
                   "type":"string",
