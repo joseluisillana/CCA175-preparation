@@ -71,7 +71,7 @@ object KafkaWordCount {
 
 
     // Separate the OK and KO events
-    val (messageLines,messageLinesKO) = lines.map(record => (record.key, record.value())) doPartitionOnFilteringBy (value =>
+    val (messageLines,messageLinesKO) = lines.map(record => (record.key, record.value)) doPartitionOnFilteringBy (value =>
       hasValidSchema(value._2.toString, schemaFile))
 
 
@@ -94,6 +94,8 @@ object KafkaWordCount {
     val windowedMessageLines = mappedMessagesLines.window(Seconds(5),Seconds(1))
 
 
+    windowedMessageLines.print()
+
     val avgOKResponseTime = windowedMessageLines.
       filter{
         case (srvId,srvType,srvHref,timestamp,responseTime,httpStatus) =>
@@ -106,12 +108,16 @@ object KafkaWordCount {
         case _ =>
           false
       }.
-      map(data => ((data._2,data._5),1)).
-      reduceByKey((x,y) => x + y).mapValues(data =>
-      (data._1._1, data._1._2, data._2))
+      map(data => (data._2,data._5))
+      //reduce((x:(String,String,Int),y:(String,String,Int)) => (x._1 + y._1, x._2+ y._2,x._3 + y._3))
+      //reduce((x:(String,String,Int),y:(String,String,Int)) => x._3 + y._3)
 
 
-    avgOKResponseTime.print()
+   // avgOKResponseTime.print()
+
+    val otro = avgOKResponseTime
+
+    otro.print()
 
     // Need the avg of response time of the last 10 minutes on every minute
     //val avgResponseTimeByWindow = lines.countByWindow(Seconds(5),Seconds(1))
