@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.bbva.mike</groupId>
+    <artifactId>http-input-api</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <!--<packaging>jar</packaging>-->
+
+    <parent>
+        <groupId>com.bbva.mike</groupId>
+        <artifactId>mike-back</artifactId>
+        <version>1.0-SNAPSHOT</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka-clients</artifactId>
+            <version>${kafka.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.kafka</groupId>
+            <artifactId>kafka_${scala.compat.version}</artifactId>
+            <version>${kafka.version}</version>
+            <classifier>test</classifier>
+            <scope>test</scope>
+        </dependency>
+        <!-- TYPESAFE CONFIG -->
+        <!-- TO READ CONFIG AS JSON -->
+        <dependency>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+        </dependency>
+
+        <!-- RABBIT MQ -->
+        <dependency>
+            <groupId>com.rabbitmq</groupId>
+            <artifactId>amqp-client</artifactId>
+            <version>${rabbitamqp.version}</version>
+        </dependency>
+
+        <!-- SCALA -->
+        <dependency>
+            <groupId>org.scala-lang</groupId>
+            <artifactId>scala-library</artifactId>            
+        </dependency>
+
+        <!-- LOGGING -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+
+        <!-- JSON PARSERS -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.databind.version}</version>
+        </dependency>
+
+        <!-- AKKA -->
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-actor_${scala.compat.version}</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-http-spray-json-experimental_${scala.compat.version}</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-http-core_${scala.compat.version}</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-stream_${scala.compat.version}</artifactId>
+            <version>${akka.version}</version>
+        </dependency>
+
+        <!-- TESTING -->
+        <dependency>
+            <groupId>org.specs2</groupId>
+            <artifactId>specs2_${scala.compat.version}</artifactId>
+            <version>${spec2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.scalatest</groupId>
+            <artifactId>scalatest_${scala.compat.version}</artifactId>
+            <version>${scalatest.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.specs2</groupId>
+            <artifactId>specs2-core_${scala.compat.version}</artifactId>
+            <version>${spec2.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-testkit_${scala.compat.version}</artifactId>
+            <version>${akka.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.typesafe.akka</groupId>
+            <artifactId>akka-http-testkit_${scala.compat.version}</artifactId>
+            <version>${akka.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.curator</groupId>
+            <artifactId>curator-test</artifactId>
+            <version>2.9.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- DEPENDENCY INJECTIONS -->
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>19.0</version>
+        </dependency>
+
+        <!-- Third Parties -->
+    </dependencies>
+
+
+    <build>
+        <sourceDirectory>src/main/scala</sourceDirectory>
+        <testSourceDirectory>src/test/scala</testSourceDirectory>
+        <plugins>
+
+            <!--
+                The Surefire Plugin is used during the test phase of the build lifecycle
+                to execute the unit tests of an application.
+                It generates reports in two different file formats:
+                  Plain text files (*.txt)
+                  XML files (*.xml)
+            -->
+            <!--
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>2.18</version>
+                <configuration> -->
+            <!-- Skips unit tests if the value of skip.unit.tests property is true -->
+            <!--<skipTests>true</skipTests>
+            <argLine>-Duser.language=es -Duser.region=ES</argLine>-->
+            <!-- Excludes integration tests when unit tests are run -->
+            <!--<excludes>
+                <exclude>**/IT*.java</exclude>
+                <exclude>**/*IT.java</exclude>
+                <exclude>**/IT*.scala</exclude>
+                <exclude>**/*IT.scala</exclude>
+            </excludes>
+        </configuration>
+    </plugin>
+    -->
+
+            <!--
+                The Application Assembler Plugin is a Maven plugin for generating scripts
+                for starting java applications.
+                All dependencies and the artifact of the project itself are placed in a generated
+                Maven repository in a defined assemble directory.
+                All artifacts (dependencies + the artifact from the project) are added to the classpath
+                in the generated bin scripts.
+                Supported platforms:
+                  Unix-variants
+                  Windows NT (Windows 9x is NOT supported)
+                  Java Service Wrapper (JSW)
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>appassembler-maven-plugin</artifactId>
+                <version>1.10</version>
+                <configuration>
+                    <!-- Set the target configuration directory to be used in the bin scripts -->
+                    <configurationDirectory>etc</configurationDirectory>
+
+                    <!-- Set the name of the source directory for configuration files -->
+                    <configurationSourceDirectory>src/main/resources/</configurationSourceDirectory>
+                    <filterConfigurationDirectory>true</filterConfigurationDirectory>
+
+                    <!-- Copy the contents from "/src/main/resources" to the target configuration
+                        directory in the assembled application -->
+                    <copyConfigurationDirectory>true</copyConfigurationDirectory>
+
+                    <!-- Include the target configuration directory in the beginning of
+                        the classpath declaration in the bin scripts -->
+                    <includeConfigurationDirectoryInClasspath>true</includeConfigurationDirectoryInClasspath>
+
+                    <extraJvmArguments></extraJvmArguments>
+                    <!-- folder name and structure of the lib contents -->
+
+                    <repositoryName>lib</repositoryName>
+                    <repositoryLayout>default</repositoryLayout>
+
+                    <!-- executable name and platform -->
+                    <programs>
+                        <program>
+                            <mainClass>com.bbva.App</mainClass>
+                            <name>App</name>
+                        </program>
+                    </programs>
+                    <platforms>
+                        <platform>unix</platform>
+                    </platforms>
+                </configuration>
+
+                <!-- attach to package phase -->
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>assemble</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+                          The Assembly Plugin for Maven is primarily intended to allow users to aggregate
+                          the project output along with its dependencies, modules, site documentation,
+                          and other files into a single distributable archive.
+
+                          Your project can build distribution "assemblies" easily, using one of the convenient,
+                          prefabricated assembly descriptors.
+
+                          These descriptors handle many common operations, such as packaging a project's artifact
+                          along with generated documentation into a single zip archive.
+
+                          Alternatively, your project can provide its own descriptor and assume a much higher level
+                          of control over how dependencies, modules, file-sets, and individual files
+                          are packaged in the assembly.
+
+                          Currently it can create distributions in the following formats:
+                            zip
+                            tar
+                            tar.gz (or tgz)
+                            tar.bz2 (or tbz2)
+                            jar
+                            dir
+                            war
+                       -->
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2.1</version>
+
+                <executions>
+                    <execution>
+                        <id>make-full-assembly</id> <!-- this is used for inheritance merges -->
+                        <phase>package</phase> <!-- append to the packaging phase. -->
+                        <goals>
+                            <goal>single</goal> <!-- goals -->
+                        </goals>
+                        <configuration>
+                            <descriptors>
+                                <descriptor>src/assembly/assembly.xml</descriptor>
+                            </descriptors>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <dependencyReducedPomLocation>${project.build.directory}/dependency-reduced-pom.xml</dependencyReducedPomLocation>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
+                                    <resource>reference.conf</resource>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Enable scalatest -->
+            <!--
+            <plugin>
+                <groupId>org.scalatest</groupId>
+                <artifactId>scalatest-maven-plugin</artifactId>
+                <version>1.0</version>
+                <configuration>
+                    <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
+                    <junitxml>.</junitxml>
+                    <filereports>WDF TestSuite.txt</filereports>
+                    <skipTests>true</skipTests>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>scala-test</id>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>integration-test</id>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            -->
+
+
+            <!--
+              The scala-maven-plugin is used for compiling/testing/running/documenting scala code in maven.
+            -->
+            <plugin>
+                <groupId>net.alchim31.maven</groupId>
+                <artifactId>scala-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>compile</goal>
+                            <goal>testCompile</goal>
+                        </goals>
+                        <configuration>
+                            <args>
+                                <!--<arg>-make:transitive</arg>-->
+                                <arg>-dependencyfile</arg>
+                                <arg>${project.build.directory}/.scala_dependencies</arg>
+                                <arg>-Xmax-classfile-name</arg>
+                                <arg>140</arg>
+                            </args>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--
+            T  he Compiler Plugin is used to compile the sources of your project
+            -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.plugin.version}</version>
+                <configuration>
+                    <source>${javaversion}</source>
+                    <target>${javaversion}</target>
+                </configuration>
+            </plugin>
+
+            <!--
+              Scalastyle, the scala CheckStyle.
+              Checkstyle is well known in the Java world.
+              Scalastyle is similar, but for Scala.
+              Both tools help teams converge on a shared coding standard with automated control.
+            -->
+            <plugin>
+                <groupId>org.scalastyle</groupId>
+                <artifactId>scalastyle-maven-plugin</artifactId>
+                <version>0.4.0</version>
+                <configuration>
+                    <verbose>false</verbose>
+                    <failOnViolation>true</failOnViolation>
+                    <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                    <failOnWarning>false</failOnWarning>
+                    <sourceDirectory>${basedir}/src/main/scala</sourceDirectory>
+                    <testSourceDirectory>${basedir}/src/test/scala</testSourceDirectory>
+                    <configLocation>${basedir}/scalastyle_config.xml</configLocation>
+                    <outputFile>${project.build.directory}/scalastyle-output.xml</outputFile>
+                    <outputEncoding>UTF-8</outputEncoding>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
