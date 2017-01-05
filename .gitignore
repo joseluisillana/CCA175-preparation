@@ -60,6 +60,7 @@ fabric.properties
 
 checkpoint/
 target/
+Events_*/
 lib_managed/
 src_managed/
 project/boot/
