@@ -7,7 +7,6 @@ import com.github.fge.jackson.JsonLoader
 import com.github.fge.jsonschema.main.{JsonSchemaFactory, JsonValidator}
 import org.apache.commons.io.IOUtils
 import org.apache.kafka.common.serialization.StringDeserializer
-import org.apache.log4j.{Level, Logger}
 import org.apache.spark._
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.kafka010.ConsumerStrategies.Subscribe
@@ -19,12 +18,10 @@ import org.json4s._
 import org.json4s.jackson.JsonMethods._
 
 
-
-
 /**
   * Created by joseluisillana on 22/12/16.
   */
-object ReadJsonFomrKafkaWindow {
+object KafkaWindowedDirect {
 
   def main(args: Array[String]) {
     if (args.length < 6) {
@@ -32,13 +29,15 @@ object ReadJsonFomrKafkaWindow {
         "comma separated> <num of threads> <batch interval> <checkpoint-dir>")
       System.exit(1)
     }
-    setupLogging
-
     // Gets the parameters
     val Array(bootstrapServers, group, topics, numThreads, batchInterval, checkpointDir) = args
 
     // Get old context or creates a new one
-    val ssc = StreamingContext.getOrCreate(checkpointDir,() => functionToCreateContext(args))
+    val ssc = StreamingContext.getOrCreate(checkpointDir, () => functionToCreateContext(args))
+
+    // Setup the log level
+    setupLogging
+
     ssc.start()
     ssc.awaitTermination()
   }
@@ -58,10 +57,8 @@ object ReadJsonFomrKafkaWindow {
     // Creates a new context
     val ssc = new StreamingContext(sparkConf, Seconds(batchInterval.toInt))
 
-    Logger.getRootLogger().setLevel(Level.ERROR)
-
     // Setup the log level
-    setupLogging
+    //setupLogging
 
     // Adjust the kafka parameters
     val kafkaParams = Map[String, Object](
@@ -79,100 +76,82 @@ object ReadJsonFomrKafkaWindow {
         else
           group
         ),
-      "auto.offset.reset" -> appConfig.getString("kafka.auto.offset.reset"),
-      "enable.auto.commit" -> (true: java.lang.Boolean)
+      "auto.offset.reset" -> "latest",
+      "enable.auto.commit" -> (false: java.lang.Boolean)
     )
 
     // GETS topics and threads
-    val topicList = topics.split(",")
+    val topicList = topics.split(",").toSet
 
     // GETS a DIRECTSTREAM
-    val lines = KafkaUtils.createDirectStream(ssc,PreferConsistent,
+    val stream = KafkaUtils.createDirectStream(ssc, PreferConsistent,
       Subscribe[String, String](topicList, kafkaParams))
 
-    // Separate the OK and KO events
-    val (messageLines,messageLinesKO) = lines.map(record => (record.key, record.value)) doPartitionOnFilteringBy (value =>
-      hasValidSchema(value._2.toString, schemaFile))
 
-    // Total count By Window
-    //val totalEventsByMinute = lines.countByWindow(Seconds(5),Seconds(1))
-    //totalEventsByMinute.print()
+    // reference to the most recently generated input rdd's offset ranges
+    var offsetRanges = Array[OffsetRange]()
 
-    //(FR234567,bbva.es_front,/srv/mysrv,2007-11-03T13:18:05.423+01:00,2012,200)
-    val mappedMessagesLines = messageLines.map(lineRaw => {
-      implicit val formats = DefaultFormats
-      ((parse(lineRaw._2) \ "self" \ "srvId").extract[String],
-        (parse(lineRaw._2) \ "self" \ "srvType").extract[String],
-        (parse(lineRaw._2) \ "self" \ "srvHref" ).extract[String],
-        (parse(lineRaw._2) \ "self" \ "health" \ "timestamp").extract[String],
-        (parse(lineRaw._2) \ "self" \ "health" \ "responseTime").extract[String],
-        (parse(lineRaw._2) \ "self" \ "health" \ "httpStatus").extract[String])
-    })
-
-    val windowedMessageLines = mappedMessagesLines.window(Seconds(10),Seconds(4))
-
-    val avgOKResponseTime = windowedMessageLines.
-      filter{
-        case (srvId,srvType,srvHref,timestamp,responseTime,httpStatus) =>
-          if (!httpStatus.isEmpty) {
-            val respStatus = try { httpStatus.toInt }catch{ case e: Throwable => 500 }
-            respStatus >= 200 && respStatus < 400
-          }else{
-            false
-          }
-        case _ =>
-          false
-      }.
-      map(data => (data._2,data._5))
-
-
-    avgOKResponseTime.foreachRDD((rdd,time) => {
-
-      // Get or register the TotalEventsCounter Broadcast
-      val totalEventsOnWindow = TotalEventsCounter.getInstance(rdd.sparkContext)
-
-      //Don't want to deal with empty batches
-      if(rdd.count() > 0){
-
-        // Combine each partition's results into a single RDD:
+    stream.transform { rdd =>
+      // It's possible to get each input rdd's offset ranges, BUT...
+      offsetRanges = rdd.asInstanceOf[HasOffsetRanges].offsetRanges
+      println("got offset ranges on the driver:\n" + offsetRanges.mkString("\n"))
+      println(s"number of kafka partitions before windowing: ${offsetRanges.size}")
+      println(s"number of spark partitions before windowing: ${rdd.partitions.size}")
+      rdd
+    }.map(
+      record => (record.key(), (record.topic(), record.partition(), record.value(), record.offset(),
+        record.timestamp(), record.timestampType()))
+    ).window(Seconds(6),Seconds(2))
+      .foreachRDD { rdd =>
+        //... if you then window, you're going to have partitions from multiple input rdds, not just the most recent one
+        println(s"number of spark partitions after windowing: ${rdd.partitions.size}")
         val repartitionedRDD = rdd.repartition(1).cache()
-
-        repartitionedRDD.foreachPartition(iter => {
+        repartitionedRDD.foreachPartition { iter =>
+          println("read offset ranges on the executor\n" + offsetRanges.mkString("\n"))
+          // notice this partition ID can be higher than the number of partitions in a single input rdd
+          println(s"this partition id ${TaskContext.get.partitionId}")
           iter.foreach(partitionItemData => {
             println(partitionItemData._2)
-
-            // And print out a directory with the results.
-            iter.saveAsTextFile("Events_" + time.milliseconds.toString)
-
-            // Stop once we've collected 1000 tweets.
-            totalEventsOnWindow.add(1)
-
-        println("totalEventsOnWindow count: " + totalEventsOnWindow.value)
           })
-        })
-        /*if (totalEventsOnWindow > 5) {
-          System.exit(0)
-        }*/
-      }else{
-        println("EL RRD TRAE 0 ¡¡¡¡ totalEventsOnWindow count: " + totalEventsOnWindow.value)
+
+        }
+        // Moral of the story:
+        // If you just care about the most recent rdd's offset ranges, a single reference is fine.
+        // If you want to do something with all of the offset ranges in the window,
+        // you need to stick them in a data structure, e.g. a bounded queue.
+
+        // But be aware, regardless of whether you use the createStream or createDirectStream api,
+        // you will get a fundamentally wrong answer if your job fails and restarts at something other than the highest offset,
+        // because the first window after restart will include all messages received while your job was down,
+        // not just X seconds worth of messages.
+
+        // In order to really solve this, you'd have to time-index kafka,
+        // and override the behavior of the dstream's compute() method to only return messages for the correct time.
+        // Or do your own bucketing into a data store based on the time in the message, not system clock at time of reading.
+
+        // Or... don't worry about it :)
+        // Restart the stream however you normally would (checkpoint, or save most recent offsets, or auto.offset.reset, whatever)
+        // and accept that your first window will be wrong
+
+
       }
 
-    })
+
 
     // Set the checkpoint
     ssc.checkpoint((if (checkpointDir == null || checkpointDir.equals("")) appConfig.getString("application" +
-      ".checkpointDir") else
+      ".checkpointDir")
+    else
       checkpointDir))
     ssc
   }
 
   def hasValidSchema(testJson: String, schemaFile: String): Boolean = {
-    try
-    {
+    try {
       val schema: JsonNode = readResourceFileAsJSON(schemaFile)
       val instance: JsonNode = asJsonNode(parse(testJson))
 
-      val validator : JsonValidator = JsonSchemaFactory.byDefault().getValidator
+      val validator: JsonValidator = JsonSchemaFactory.byDefault().getValidator
 
       val processingReport = validator.validate(schema, instance)
 
@@ -186,15 +165,13 @@ object ReadJsonFomrKafkaWindow {
       }*/
       processingReport.isSuccess
     }
-    catch
-      {
-        case jsonMappingException: JsonMappingException =>
-          false
-        case _ : Throwable =>
-          false
-      }
+    catch {
+      case jsonMappingException: JsonMappingException =>
+        false
+      case _: Throwable =>
+        false
+    }
   }
-
 
 
   def readResourceFileAsJSON(fileName: String): JsonNode = {
@@ -240,6 +217,7 @@ object ReadJsonFomrKafkaWindow {
 
 
   }
+
 }
 
 
