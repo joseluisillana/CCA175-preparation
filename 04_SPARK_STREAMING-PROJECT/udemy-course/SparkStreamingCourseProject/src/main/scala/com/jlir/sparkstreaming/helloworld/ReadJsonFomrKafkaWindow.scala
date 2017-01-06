@@ -140,15 +140,14 @@ object ReadJsonFomrKafkaWindow {
         repartitionedRDD.foreachPartition(iter => {
           iter.foreach(partitionItemData => {
             println(partitionItemData._2)
-
-            // And print out a directory with the results.
-            iter.saveAsTextFile("Events_" + time.milliseconds.toString)
-
-            // Stop once we've collected 1000 tweets.
-            totalEventsOnWindow.add(1)
-
-        println("totalEventsOnWindow count: " + totalEventsOnWindow.value)
           })
+          // And print out a directory with the results.
+          repartitionedRDD.saveAsTextFile("Events_" + time.milliseconds.toString)
+
+          // Stop once we've collected 1000 tweets.
+          totalEventsOnWindow.add(1)
+
+          println("totalEventsOnWindow count: " + totalEventsOnWindow.value)
         })
         /*if (totalEventsOnWindow > 5) {
           System.exit(0)

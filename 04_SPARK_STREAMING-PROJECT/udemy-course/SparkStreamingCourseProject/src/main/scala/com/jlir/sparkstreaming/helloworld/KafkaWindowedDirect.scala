@@ -100,9 +100,11 @@ object KafkaWindowedDirect {
       rdd
     }.map(
       record => (record.key(), (record.topic(), record.partition(), record.value(), record.offset(),
-        record.timestamp(), record.timestampType()))
-    ).window(Seconds(6),Seconds(2))
-      .foreachRDD { rdd =>
+        record.timestamp(), record.timestampType()))).
+    doPartitionOnFilteringBy (value =>
+        hasValidSchema(value._2._3.toString, schemaFile))._1.
+      window(Seconds(6),Seconds(2)).
+      foreachRDD { rdd =>
         //... if you then window, you're going to have partitions from multiple input rdds, not just the most recent one
         println(s"number of spark partitions after windowing: ${rdd.partitions.size}")
         val repartitionedRDD = rdd.repartition(1).cache()
