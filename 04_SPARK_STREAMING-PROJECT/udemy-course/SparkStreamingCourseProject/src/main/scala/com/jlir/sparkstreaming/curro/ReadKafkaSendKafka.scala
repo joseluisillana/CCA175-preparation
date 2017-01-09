@@ -40,7 +40,7 @@ object ReadKafkaSendKafka {
       System.exit(1)
     }
     // Gets the parameters
-    val Array(bootstrapServers, group, topics, numThreads, batchInterval, checkpointDir, showTraces) = args
+    val Array(bootstrapServers, group, topicsIn, topicsOut, numThreads, batchInterval, checkpointDir, showTraces) = args
 
     // Get old context or creates a new one
     val ssc = StreamingContext.getOrCreate(checkpointDir, () => functionToCreateContext(args))
@@ -59,7 +59,7 @@ object ReadKafkaSendKafka {
     val schemaFile = "json-schema.json"
 
     // Gets the parameters
-    val Array(bootstrapServers, group, topics, numThreads, batchInterval, checkpointDir, showTraces) = args
+    val Array(bootstrapServers, group, topicsIn, topicsOut, numThreads, batchInterval, checkpointDir, showTraces) = args
 
     // Create the context with a X seconds of batch interval
     val sparkConf = new SparkConf().setMaster(s"local[${numThreads}]").setAppName("Kafka Work Count")
@@ -98,11 +98,12 @@ object ReadKafkaSendKafka {
     }
 
     // GETS topics and threads
-    val topicList = topics.split(",").toSet
+    val topicInList = topicsIn.split(",").toSet
+    val topicOut = topicsOut.split(",")(0)
 
     // GETS a DIRECTSTREAM
     val stream = KafkaUtils.createDirectStream(ssc, PreferConsistent,
-      Subscribe[String, String](topicList, kafkaParams))
+      Subscribe[String, String](topicInList, kafkaParams))
 
 
     // reference to the most recently generated input rdd's offset ranges
@@ -124,27 +125,12 @@ object ReadKafkaSendKafka {
     if (showTraces.equals("true"))
     println(s"number of elements before windowing: ${streamMessagesOk.count()}")
 
-    streamMessagesOk.
-      window(Seconds(6), Seconds(2)).
-      foreachRDD { (rdd, time) => {
-        processWindowedData(rdd, time, offsetRanges, showTraces, kafkaProducer)
-
-
+    streamMessagesOk.window(Seconds(6), Seconds(2)).
+      foreachRDD { (rdd, time) =>
+        {
+          processWindowedData(rdd, time, offsetRanges, showTraces, kafkaProducer, topicOut)
+        }
       }
-      }
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     // Set the checkpoint
     ssc.checkpoint((if (checkpointDir == null || checkpointDir.equals("")) appConfig.getString("application" +
@@ -155,7 +141,8 @@ object ReadKafkaSendKafka {
   }
 
   def processWindowedData(rdd: RDD[(String, (String, Int, String, Long, Long, TimestampType, (String, String, String,
-    String, String, String)))] , time: Time, offsetRanges: Array[OffsetRange], showTraces: String, kafkaProducer: Broadcast[MySparkKafkaProducer[Array[Byte], String]]): Unit = {
+    String, String, String)))] , time: Time, offsetRanges: Array[OffsetRange], showTraces: String, kafkaProducer:
+  Broadcast[MySparkKafkaProducer[Array[Byte], String]], topicOut: String ): Unit = {
     // As we could have multiple processes adding into these running totals
     // at the same time, we'll just Java's AtomicLong class to make sure
     // these counters are thread-safe.
@@ -217,20 +204,20 @@ object ReadKafkaSendKafka {
       }
 
 
-    } else {
-      if (showTraces.equals("true"))
-      println(s"NO NEW DATA: number of elements after windowing: ${rdd.count()}")
-    }
 
 
 
-    val avgResponseTimeOk: Double = util.Try(accumResponseTimeOk.doubleValue() / accumEventsOk
-      .doubleValue()) getOrElse 1.0
+
+    val avgResponseTimeOk: Long = util.Try(accumResponseTimeOk.get() / accumEventsOk
+      .get()) getOrElse 0
 
     // Print totals from current window
-    println("########################### Total success: " + accumEventsOk + " Total failure: " + accumEventsKo)
+    println("########################### Total success: " + Option(accumEventsOk.get()).getOrElse(0) + " Total failure: "
+      + Option
+    (accumEventsKo
+      .get()).getOrElse(0))
     // Print AVG of response time from current window
-    println("########################### OK AVG: " + Duration.millis(avgResponseTimeOk.toLong).toString + ".")
+    println("########################### OK AVG: " + Duration.standardSeconds(avgResponseTimeOk).toString + ".")
 
     // Don't alarm unless we have some minimum amount of data to work with
     if (accumEventsOk.get() + accumEventsKo.get() > 100) {
@@ -248,13 +235,18 @@ object ReadKafkaSendKafka {
       }
     }
     val metadata: Stream[Future[RecordMetadata]] = Stream(kafkaProducer.value.sendKeyValueToTopic(
-      "my-output-topic",
+      topicOut,
       time.toString().getBytes,
-      """{ \"time\": """ + time.toString() + """, """ + """\"totalOk\": """+ accumEventsOk.get() +
-        """\"avgResponseTime\":""" + avgResponseTimeOk.toDouble.toString + """}""".stripMargin))
+      """{ "time": """ + time.toString() + """, """ + """"totalOk": """+ accumEventsOk.get() +
+        """, "avgResponseTime": """ + avgResponseTimeOk.toDouble.toString + """}""".stripMargin))
 
     metadata.foreach { metadata =>
       println(metadata.get()) }
+
+    } else {
+      if (showTraces.equals("true"))
+        println(s"NO NEW DATA: number of elements after windowing: ${rdd.count()}")
+    }
 
   }
 
