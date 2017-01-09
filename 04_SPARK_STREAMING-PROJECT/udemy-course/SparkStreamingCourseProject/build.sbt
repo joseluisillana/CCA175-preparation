@@ -25,7 +25,8 @@ libraryDependencies ++= Seq(
   "com.typesafe" % "config" % "1.3.1",
   "org.twitter4j" % "twitter4j-core" % twitterVersion,
   "org.twitter4j" % "twitter4j-stream" % twitterVersion,
-  "org.apache.spark" %% "spark-streaming-twitter" % sscTwitterVersion
+  "org.apache.spark" %% "spark-streaming-twitter" % sscTwitterVersion,
+  "joda-time" % "joda-time" % "2.9.7"
   //"org.spark-project" %% "dstream-twitter" % "0.1.0"
 
 )
