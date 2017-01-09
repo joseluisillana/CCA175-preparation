@@ -133,17 +133,22 @@ object ReadJsonFomrKafkaWindow {
 
       //Don't want to deal with empty batches
       if(rdd.count() > 0){
+
         // Combine each partition's results into a single RDD:
         val repartitionedRDD = rdd.repartition(1).cache()
 
-        // And print out a directory with the results.
-        repartitionedRDD.saveAsTextFile("Events_" + time.milliseconds.toString)
+        repartitionedRDD.foreachPartition(iter => {
+          iter.foreach(partitionItemData => {
+            println(partitionItemData._2)
+          })
+          // And print out a directory with the results.
+          repartitionedRDD.saveAsTextFile("Events_" + time.milliseconds.toString)
 
-        // Stop once we've collected 1000 tweets.
-        totalEventsOnWindow.add(repartitionedRDD.count())
+          // Stop once we've collected 1000 tweets.
+          totalEventsOnWindow.add(1)
 
-        println("totalEventsOnWindow count: " + totalEventsOnWindow.value)
-
+          println("totalEventsOnWindow count: " + totalEventsOnWindow.value)
+        })
         /*if (totalEventsOnWindow > 5) {
           System.exit(0)
         }*/
