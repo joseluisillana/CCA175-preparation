@@ -79,7 +79,9 @@ object StructuredStreaming {
     setupLogging()
 
     // Create a stream of text files dumped into the logs directory
-  /*  val rawData = spark.readStream.text("file:////Users/joseluisillanaruiz/ZZ_Trabajo/ZZ_Repositorios/GitPersonal" +
+    // TODO No funciona si leemos de directorios desde fuera del proyecto, no acumula, sino que contabiliza
+    // unicamente lo que tenga el fichero nuevo que peguemos al directorio.
+    /*val rawData = spark.readStream.text("file:////Users/joseluisillanaruiz/ZZ_Trabajo/ZZ_Repositorios/GitPersonal" +
       "/CCA175-preparation/04_SPARK_STREAMING-PROJECT/udemy-course/Chapter5/mats/logs")
 */
     val rawData = spark.readStream.text("logs")
