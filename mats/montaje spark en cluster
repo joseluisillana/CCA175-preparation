@@ -107,3 +107,11 @@ checkpoint true spark
 
 
 ./bin/spark-submit --class com.bbva.SparkStreamingMIKE --master spark://192.168.3.213:7077 --deploy-mode client --supervise --executor-memory 2G --total-executor-cores 4 /home/ec2-user/spark-module-1.0-SNAPSHOT.jar 92.168.3.21:9092,192.168.3.22:9092,192.168.3.23:9092 grupo_test default_net_topic_in spark_topic_output 2 2 6 2 checkpoint true spark
+
+
+
+#######################################
+HAY QUE ESPECIFICARLE LAS LIBRERIAS ¡¡
+#######################################
+
+spark-submit --packages org.apache.spark:spark-streaming-kafka_2.11:2.0.2 --master spark://ip-192-168-3-213.eu-west-1.compute.internal:7077  --class com.bbva.SparkStreamingMIKE --deploy-mode cluster spark-module-1.0-SNAPSHOT.jar 192.168.3.21:9092,192.168.3.22:9092,192.168.3.23:9092 testspark default_net_topic_in spark_topic_output 2 2 6 2 checkpoint true spark
