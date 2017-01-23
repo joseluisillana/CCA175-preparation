@@ -1,7 +1,7 @@
 package com.jlir.sparkstreaming.curro
 
 import java.io.FileNotFoundException
-import java.util.Properties
+import java.util.concurrent.Future
 import java.util.concurrent.atomic.AtomicLong
 
 import com.fasterxml.jackson.databind.{JsonMappingException, JsonNode}
@@ -9,38 +9,34 @@ import com.github.fge.jackson.JsonLoader
 import com.github.fge.jsonschema.main.{JsonSchemaFactory, JsonValidator}
 import org.apache.commons.io.IOUtils
 import org.apache.kafka.clients.consumer.ConsumerRecord
-import org.apache.kafka.clients.producer.{RecordMetadata, ProducerRecord, KafkaProducer}
+import org.apache.kafka.clients.producer.{KafkaProducer, ProducerRecord, RecordMetadata}
 import org.apache.kafka.common.record.TimestampType
-import org.apache.kafka.common.serialization.{ByteArraySerializer, StringSerializer, StringDeserializer}
+import org.apache.kafka.common.serialization.{ByteArraySerializer, StringDeserializer, StringSerializer}
 import org.apache.spark.broadcast.Broadcast
 import org.apache.spark.rdd.RDD
 import org.apache.spark.streaming.dstream.DStream
 import org.apache.spark.streaming.kafka010.ConsumerStrategies._
 import org.apache.spark.streaming.kafka010.LocationStrategies._
 import org.apache.spark.streaming.kafka010.{HasOffsetRanges, KafkaUtils, OffsetRange}
-import org.apache.spark.streaming.{Time, Seconds, StreamingContext}
+import org.apache.spark.streaming.{Seconds, StreamingContext, Time}
 import org.apache.spark.util.LongAccumulator
 import org.apache.spark.{SparkConf, SparkContext, TaskContext}
 import org.joda.time.Duration
 import org.json4s.DefaultFormats
 import org.json4s.jackson.JsonMethods._
-
-import java.util.concurrent.Future
-import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.kafka.clients.producer.RecordMetadata
 /**
   * Created by joseluisillanaruiz on 9/1/17.
   */
 object ReadKafkaSendKafka {
 
   def main(args: Array[String]) {
-    if (args.length < 7) {
+    if (args.length < 9) {
       System.err.println("Usage: KafkaReceiver <bootstrapServers URI in form host:port> <groupId> <list of topics, " +
-        "comma separated> <num of threads> <batch interval> <checkpoint-dir> <showtraces-flag>")
+        "comma separated> <num of threads> <batch interval> <window_interval> <slide_interval> <checkpoint-dir> <showtraces-flag>")
       System.exit(1)
     }
     // Gets the parameters
-    val Array(bootstrapServers, group, topicsIn, topicsOut, numThreads, batchInterval, checkpointDir, showTraces) = args
+    val Array(bootstrapServers, group, topicsIn, topicsOut, numThreads, batchInterval, windowInterval, slideInterval, checkpointDir, showTraces) = args
 
     // Get old context or creates a new one
     val ssc = StreamingContext.getOrCreate(checkpointDir, () => functionToCreateContext(args))
@@ -59,7 +55,7 @@ object ReadKafkaSendKafka {
     val schemaFile = "json-schema.json"
 
     // Gets the parameters
-    val Array(bootstrapServers, group, topicsIn, topicsOut, numThreads, batchInterval, checkpointDir, showTraces) = args
+    val Array(bootstrapServers, group, topicsIn, topicsOut, numThreads, batchInterval, windowInterval, slideInterval, checkpointDir, showTraces) = args
 
     // Create the context with a X seconds of batch interval
     val sparkConf = new SparkConf().setMaster(s"local[${numThreads}]").setAppName("Kafka Work Count")
@@ -125,7 +121,7 @@ object ReadKafkaSendKafka {
     if (showTraces.equals("true"))
     println(s"number of elements before windowing: ${streamMessagesOk.count()}")
 
-    streamMessagesOk.window(Seconds(6), Seconds(2)).
+    streamMessagesOk.window(Seconds(windowInterval.toInt), Seconds(slideInterval.toInt)).
       foreachRDD { (rdd, time) =>
         {
           processWindowedData(rdd, time, offsetRanges, showTraces, kafkaProducer, topicOut)

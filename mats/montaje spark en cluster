@@ -1,0 +1,193 @@
+#################################################################################
+#### En AWS sobre EC2
+#################################################################################
+
+1º Generar las máquianas, para nosotros han sido 3:
+
+  ->  kqof-env-spark-standalone-00 t2.micro:
+          Privada: 192.168.3.213
+          Publica: 54.194.217.177
+  ->  kqof-env-spark-standalone-01 t2.micro
+          Privada: 192.168.3.214
+          Publica: 54.154.209.65
+  ->  kqof-env-spark-standalone-02 t2.micro
+          Privada: 192.168.3.215
+          Publica: 54.194.84.90
+
+2º Update system and isntalling tools (git, jdk, sbt):
+  
+  -> sudo yum update
+  -> sudo yum update
+  -> sudo yum upgrade
+  -> sudo yum install wget
+  -> sudo yum install vim
+  -> sudo yum install git
+  -> sudo yum install bash-completion
+
+    ******************************************************************************************
+    ***** JAVA 8
+    ******************************************************************************************
+    -> java -version (No debe estar instalada)
+    -> cd /opt/
+    -> sudo wget --no-cookies --no-check-certificate --header "Cookie: gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie" "http://download.oracle.com/otn-pub/java/jdk/8u111-b14/jdk-8u111-linux-x64.tar.gz"
+
+    -> sudo tar xzf jdk-8u111-linux-x64.tar.gz
+    -> cd /opt/jdk1.8.0_111/
+    -> sudo alternatives --install /usr/bin/java java /opt/jdk1.8.0_111/bin/java 2
+    -> sudo alternatives --config java
+    -> sudo alternatives --install /usr/bin/jar jar /opt/jdk1.8.0_111/bin/jar 2
+    -> sudo alternatives --install /usr/bin/javac javac /opt/jdk1.8.0_111/bin/javac 2
+    -> sudo alternatives --set jar /opt/jdk1.8.0_111/bin/jar
+    -> sudo alternatives --set javac /opt/jdk1.8.0_111/bin/javac
+    -> java -version
+    -> Changes in profile:
+            export JAVA_HOME=/opt/jdk1.8.0_111
+            export JRE_HOME=/opt/jdk1.8.0_111/jre
+            export PATH=$PATH:/opt/jdk1.8.0_111/bin:/opt/jdk1.8.0_111/jre/bin
+
+3º Descargar Spark, nosotros, la versión 1.6.3:
+  
+  -> cd ~
+  -> mkdir materials
+  -> cd materials
+  -> git clone git://github.com/apache/spark.git
+  -> git checkout branch-1.6
+  -> ./[SPARK DIR]/sbt/sbt assembly 1> log1.log 2> log2.log &
+
+4º Ejecutar en el nodo master:
+  -> ./[SPARK DIR]/sbin/start-master.sh 
+
+5º Ejecutar en los nodos workers:
+  -> ./[SPARK DIR]/sbin/start-slave.sh spark://[IP-MASTER-NODE]:7077 
+
+
+
+
+###############################################################
+COMMANDS
+###############################################################
+
+spark-shell --packages org.apache.spark:spark-streaming-kafka_2.10:1.6.3
+
+sc.setLocalProperty("spark.driver.allowMultipleContexts", "true")
+
+val ssc = new StreamingContext(sc, Seconds(1))
+
+
+
+./bin/spark-submit --class com.bbva.SparkStreamingMIKE --master spark://192.168.2.213:7077 --deploy-mode cluster --supervise --executor-memory 2G --total-executor-cores 4 /home/ec2-user/spark-module-1.0-SNAPSHOT.jar localhost:9092 grupo_test default_net_topic_in spark_topic_output 2 2 6 2 checkpoint true spark
+
+
+
+./bin/spark-submit --class com.bbva.SparkStreamingMIKE \ 
+--master spark://192.168.3.213:7077 \ 
+--deploy-mode cluster \ 
+--supervise \ 
+--executor-memory 2G \ 
+--total-executor-cores 4 \ 
+./home/ec2-user/spark-module-1.0-SNAPSHOT.jar \ 192.168.3.21:9092,192.168.3.22:9092,192.168.3.23:9092 \ 
+grupo_test \ 
+default_net_topic_in \ 
+spark_topic_output \ 
+2 2 6 2 \ 
+checkpoint true spark
+
+./bin/spark-submit --class com.bbva.SparkStreamingMIKE \ 
+--master spark://192.168.3.213:7077 \ 
+--deploy-mode client \ 
+--supervise \ 
+--executor-memory 2G \ 
+--total-executor-cores 4 \ 
+/home/ec2-user/spark-module-1.0-SNAPSHOT.jar \ 192.168.3.21:9092,192.168.3.22:9092,192.168.3.23:9092 \ 
+grupo_test \ 
+default_net_topic_in \ 
+spark_topic_output \ 
+2 2 6 2 \ 
+checkpoint true spark
+
+
+./bin/spark-submit --class com.bbva.SparkStreamingMIKE --master spark://192.168.3.213:7077 --deploy-mode client --supervise --executor-memory 2G --total-executor-cores 4 /home/ec2-user/spark-module-1.0-SNAPSHOT.jar 92.168.3.21:9092,192.168.3.22:9092,192.168.3.23:9092 grupo_test default_net_topic_in spark_topic_output 2 2 6 2 checkpoint true spark
+
+
+
+#######################################
+HAY QUE ESPECIFICARLE LAS LIBRERIAS ¡¡
+#######################################
+
+spark-submit --packages org.apache.spark:spark-streaming-kafka-0-10_2.11:2.0.2,com.github.fge:json-schema-validator:2.2.6,com.fasterxml.jackson.core:jackson-core:2.6.2,joda-time:joda-time:2.9.7  --master spark://ip-192-168-3-213.eu-west-1.compute.internal:7077  --class com.bbva.SparkStreamingMIKE --deploy-mode cluster spark-module-1.0-SNAPSHOT.jar 192.168.3.21:9092,192.168.3.22:9092,192.168.3.23:9092 testspark default_net_topic_in spark_topic_output 2 2 6 2 checkpoint true spark
+
+
+spark-submit --packages org.apache.spark:spark-streaming-kafka-0-10_2.11:2.0.2,com.github.fge:json-schema-validator:2.2.6,com.fasterxml.jackson.core:jackson-core:2.6.2,joda-time:joda-time:2.9.7  --master spark://ip-192-168-3-213.eu-west-1.compute.internal:7077  --class com.bbva.SparkStreamingMIKE --deploy-mode cluster spark-module-1.0-SNAPSHOT.jar
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+################# PARA NGINX
+
+#############spark start
+
+  server {
+       listen 80;
+       server_name 54.171.209.163;
+       
+       location /static {
+        proxy_pass  http://192.168.3.213:8080;
+       }
+
+       location /sparkmaster80 {
+        proxy_pass  http://192.168.3.213:8080;
+       }
+
+       location /sparksl1480 {
+        proxy_pass  http://192.168.3.214:8080;
+       }
+       
+       location /sparksl1580 {
+        proxy_pass  http://192.168.3.215:8080;
+       }
+
+    
+    
+       location /sparkmaster81 {
+        proxy_pass  http://192.168.3.213:8081;
+       }
+
+       location /sparksl1481 {
+        proxy_pass  http://192.168.3.214:8081;
+       }
+
+       location /sparksl1581 {
+        proxy_pass  http://192.168.3.215:8081;
+       }
+    
+       location /sparkmaster40 {
+        proxy_pass  http://192.168.3.213:4040;
+       }
+
+       location /sparksl1440 {
+        proxy_pass  http://192.168.3.214:4040;
+       }
+
+       location /sparksl1540 {
+        proxy_pass  http://192.168.3.215:4040;
+       }
+    }
+
+#############spark end
