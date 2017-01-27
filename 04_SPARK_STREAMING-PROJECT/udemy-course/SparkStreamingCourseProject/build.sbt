@@ -9,17 +9,23 @@ val overrideScalaVersion = "2.11.8"
 //USING SPARK 1.1.1
 val sparkVersion = "2.0.2"
 val sscKafkaVersion = "2.0.2"
+val sscFlumeVersion = "2.0.2"
+val sscKinesisVersion = "2.0.2"
 val sscTwitterVersion = "1.6.0"
 val jackson = "2.8.5"
 val jacksonSchemaValidator = "2.2.6"
 val typesafeConfigVersion = "1.3.1"
 val twitterVersion = "4.0.6"
+val sscCassandraVersion = "2.0.0-M3"
 
 libraryDependencies ++= Seq(
   "org.apache.spark"      %%  "spark-core"      %   sparkVersion,
   "org.apache.spark"      %% "spark-sql"        % sparkVersion,
   "org.apache.spark"      %% "spark-streaming"  % sparkVersion,
   "org.apache.spark"      %% "spark-streaming-kafka-0-10" % sscKafkaVersion,
+  "org.apache.spark"      %% "spark-streaming-flume" % sscFlumeVersion,
+  "org.apache.spark"      %% "spark-streaming-kinesis-asl" % sscKinesisVersion,
+  "com.datastax.spark" %% "spark-cassandra-connector" % sscCassandraVersion,
   "com.fasterxml.jackson.core" % "jackson-core" % jackson,
   "com.github.fge" % "json-schema-validator" % "2.2.6",
   "com.typesafe" % "config" % "1.3.1",
