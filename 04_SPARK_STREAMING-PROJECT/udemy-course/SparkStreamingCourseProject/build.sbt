@@ -12,6 +12,7 @@ val sscKafkaVersion = "2.0.2"
 val sscFlumeVersion = "2.0.2"
 val sscKinesisVersion = "2.0.2"
 val sscTwitterVersion = "1.6.0"
+val sscMLLibVersion = "2.0.2"
 val jackson = "2.8.5"
 val jacksonSchemaValidator = "2.2.6"
 val typesafeConfigVersion = "1.3.1"
@@ -25,6 +26,7 @@ libraryDependencies ++= Seq(
   "org.apache.spark"      %% "spark-streaming-kafka-0-10" % sscKafkaVersion,
   "org.apache.spark"      %% "spark-streaming-flume" % sscFlumeVersion,
   "org.apache.spark"      %% "spark-streaming-kinesis-asl" % sscKinesisVersion,
+  "org.apache.spark"      %% "spark-mllib" % sscMLLibVersion,
   "com.datastax.spark" %% "spark-cassandra-connector" % sscCassandraVersion,
   "com.fasterxml.jackson.core" % "jackson-core" % jackson,
   "com.github.fge" % "json-schema-validator" % "2.2.6",
