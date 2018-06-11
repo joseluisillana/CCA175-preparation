@@ -53,6 +53,7 @@ fabric.properties
 # .idea/misc.xml
 # *.ipr
 
+logs/*
 
 ### SBT ###
 # Simple Build Tool
